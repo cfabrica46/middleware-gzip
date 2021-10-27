@@ -5,6 +5,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/cfabrica46/middleware-gzip/gingzip"
 )
 
 type gzipResponseWriter struct {
@@ -17,10 +19,10 @@ func (w gzipResponseWriter) Write(b []byte) (int, error) {
 }
 
 func main() {
+	go gingzip.GinRouter()
+
 	handler := http.HandlerFunc(index)
-
 	http.Handle("/", middleware(handler))
-
 	log.Println("ListenAndServe on localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
